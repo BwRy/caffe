@@ -487,6 +487,34 @@ class SliceLayer : public Layer<Dtype> {
   vector<int> slice_point_;
 };
 
+template <typename Dtype>
+class SwitchLayer : public Layer<Dtype> {
+ public:
+  explicit SwitchLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+//  virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom,
+//      const vector<Blob<Dtype>*>& top) {}
+  virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+
+  virtual inline LayerParameter_LayerType type() const {
+    return LayerParameter_LayerType_SWITCH;
+  }
+  virtual inline int MinBottomBlobs() const { return 3; }
+  virtual inline int ExactNumTopBlobs() const { return 1; }
+
+ protected:
+  virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+
+  int num_;
+  int channels_;
+  int height_;
+  int width_;
+};
+
 }  // namespace caffe
 
 #endif  // CAFFE_COMMON_LAYERS_HPP_
