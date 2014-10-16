@@ -58,14 +58,20 @@ void SwitchLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
   const Dtype* switch_data = bottom[0]->cpu_data();
   for (int i = 0; i < num_; ++i) {
     CHECK_EQ(switch_data[i], std::ceil(switch_data[i]));
-    const int bottom_data_id = static_cast<int>(switch_data[i]);
-    if (!propagate_down[bottom_data_id + 1]) { continue; }
-    Blob<Dtype>* bottom_blob = bottom[bottom_data_id + 1];
-    Dtype* bottom_diff = bottom_blob->mutable_cpu_diff();
-    caffe_copy(
-        num_elem,
-        top_diff + top_blob->offset(i),
-        bottom_diff + bottom_blob->offset(i));
+    const int selected_bottom_data_id = static_cast<int>(switch_data[i]);
+    for (auto j = 1; j < bottom.size(); ++j) {
+      if (!propagate_down[j]) { continue; }
+      Blob<Dtype>* bottom_blob = bottom[j];
+      Dtype* bottom_diff = bottom_blob->mutable_cpu_diff();
+      if (j == selected_bottom_data_id + 1) {
+        caffe_copy(
+            num_elem,
+            top_diff + top_blob->offset(i),
+            bottom_diff + bottom_blob->offset(i));
+      } else {
+        caffe_set(num_elem, static_cast<Dtype>(0.0), bottom_diff + bottom_blob->offset(i));
+      }
+    }
   }
 }
 
