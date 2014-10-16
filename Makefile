@@ -244,8 +244,12 @@ ifeq ($(OSX), 1)
 	# clang throws this warning for cuda headers
 	WARNINGS += -Wno-unneeded-internal-declaration
 	ifneq ($(findstring 10.9, $(shell sw_vers -productVersion)),)
-		CXXFLAGS += -stdlib=libstdc++
-		LINKFLAGS += -stdlib=libstdc++
+		ifneq ($(CPU_ONLY), 1)
+			CXXFLAGS += -stdlib=libstdc++
+			LINKFLAGS += -stdlib=libstdc++
+		else
+			CXXFLAGS += -DGTEST_USE_OWN_TR1_TUPLE
+		endif
 	endif
 	# boost::thread is called boost_thread-mt to mark multithreading on OS X
 	LIBRARIES += boost_thread-mt
