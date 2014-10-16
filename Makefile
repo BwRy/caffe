@@ -249,6 +249,7 @@ ifeq ($(OSX), 1)
 			LINKFLAGS += -stdlib=libstdc++
 		else
 			CXXFLAGS += -DGTEST_USE_OWN_TR1_TUPLE
+			LINKFLAGS += -DGTEST_USE_OWN_TR1_TUPLE
 		endif
 	endif
 	# boost::thread is called boost_thread-mt to mark multithreading on OS X
