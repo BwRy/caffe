@@ -59,7 +59,7 @@ void SwitchLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
   for (int i = 0; i < num_; ++i) {
     CHECK_EQ(switch_data[i], std::ceil(switch_data[i]));
     const int selected_bottom_data_id = static_cast<int>(switch_data[i]);
-    for (auto j = 1; j < bottom.size(); ++j) {
+    for (int j = 1; j < bottom.size(); ++j) {
       if (!propagate_down[j]) { continue; }
       Blob<Dtype>* bottom_blob = bottom[j];
       Dtype* bottom_diff = bottom_blob->mutable_cpu_diff();
