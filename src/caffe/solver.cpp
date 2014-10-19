@@ -952,7 +952,7 @@ void AdaDeltaSolver<Dtype>::ComputeUpdateValue() {
 
       // scale
       caffe_gpu_scal(net_params[param_id]->count(), local_rate,
-          net_params[param_id]->mutable_cpu_diff());
+          net_params[param_id]->mutable_gpu_diff());
 
       // compute square of update
       caffe_gpu_powx(net_params[param_id]->count(),
