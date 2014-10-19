@@ -886,6 +886,7 @@ void AdaDeltaSolver<Dtype>::ComputeUpdateValue() {
   case Caffe::GPU:
 #ifndef CPU_ONLY
     for (int param_id = 0; param_id < net_params.size(); ++param_id) {
+      Dtype local_rate = rate * net_params_lr[param_id];
       Dtype local_decay = weight_decay * net_params_weight_decay[param_id];
 
       if (local_decay) {
